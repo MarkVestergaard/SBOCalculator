@@ -16,3 +16,5 @@ Functional Imaging Unit,
 Department of Clinical Physiology and Nuclear Medicine
 Rigshospitalet Copenhagen, Denmark
 mark.bitsch.vestergaard@regionh.dk
+
+<img width="1154" alt="SBOCalculator" src="https://user-images.githubusercontent.com/102877223/161437896-7ece4d42-e316-4440-839f-65236d641e8b.png">
