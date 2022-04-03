@@ -5,6 +5,7 @@ GUI for analyzing susceptibility-based oximetry MRI data for measuring blood sat
 Written for python 3.8. Tested on SBO data from 3T Philips dSTREAM Achieva MRI and 3T Siemens Biograph mMR hybrid PET/MR system.
 
 Input for Philips scanner data: **.PAR file <n>
+ 
 Input for Siemens scanner data: nifti-file converted from dicom using dcmniix (https://github.com/rordenlab/dcm2niix)<n>
 
 Region of interest (ROI) is manual delineated. 
