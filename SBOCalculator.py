@@ -42,6 +42,7 @@ from matplotlib.path import Path
 from skimage import measure
 from matplotlib.lines import Line2D
 from PIL import Image, ImageDraw
+from mpl_point_clicker import clicker
 import os 
 
 
@@ -107,7 +108,7 @@ class Img_data_parrec():
         self.Echo_diff_deck=self.Echo2_deck-self.Echo1_deck
         self.ndix=self.Echo1_deck.shape
         self.DeltaTE=(self.pold_header_slice_info['echo_time'].max()-self.pold_header_slice_info['echo_time'].min())/1000
-  
+
     
     def set_new_data(self): # Set new data
         self.raw_img_filename = filedialog.askopenfilename(initialdir = "/",title = "Select file",filetypes = (("PAR files","*.PAR"),("all files","*.*")))        
@@ -214,31 +215,31 @@ class Img_data_nii():
 
 
         if M_ec1_ind==0:
-            self.Mod_deck=np.rot90(  self.nifti_file.dataobj/self.nifti_file.dataobj.max()   )*np.pi
+            self.Mod_deck=np.squeeze(np.rot90(  self.nifti_file.dataobj/self.nifti_file.dataobj.max()   ))*np.pi
         elif M_ec1_ind==1:
-            self.Mod_deck=np.rot90(  self.nifti_file_b.dataobj/self.nifti_file_b.dataobj.max()  )*np.pi
+            self.Mod_deck=np.squeeze(np.rot90(  self.nifti_file_b.dataobj/self.nifti_file_b.dataobj.max()  ))*np.pi
         elif M_ec1_ind==2:
-            self.Mod_deck=np.rot90(  self.nifti_file_c.dataobj/self.nifti_file_c.dataobj.max()   )*np.pi
+            self.Mod_deck=np.squeeze(np.rot90(  self.nifti_file_c.dataobj/self.nifti_file_c.dataobj.max()   ))*np.pi
         elif M_ec1_ind==3:
-            self.Mod_deck=np.rot90(   self.nifti_file_d.dataobj/self.nifti_file_d.dataobj.max()   )*np.pi
+            self.Mod_deck=np.squeeze(np.rot90(   self.nifti_file_d.dataobj/self.nifti_file_d.dataobj.max()   ))*np.pi
  
         if P_ec1_ind==0:
-            self.Echo1_deck=np.rot90( self.nifti_file.dataobj )/2048
+            self.Echo1_deck=np.squeeze(np.rot90( self.nifti_file.dataobj ))/2048
         elif P_ec1_ind==1:
-            self.Echo1_deck=np.rot90(  self.nifti_file_b.dataobj  )/2048
+            self.Echo1_deck=np.squeeze(np.rot90(  self.nifti_file_b.dataobj  ))/2048
         elif P_ec1_ind==2:
-            self.Echo1_deck=np.rot90( self.nifti_file_c.dataobj )/2048
+            self.Echo1_deck=np.squeeze(np.rot90( self.nifti_file_c.dataobj ))/2048
         elif P_ec1_ind==3:
-            self.Echo1_deck=np.rot90(  self.nifti_file_d.dataobj  )/2048
+            self.Echo1_deck=np.squeeze(np.rot90(  self.nifti_file_d.dataobj  ))/2048
             
         if P_ec2_ind==0:
-            self.Echo2_deck=np.rot90( self.nifti_file.dataobj  )/2048
+            self.Echo2_deck=np.squeeze(np.rot90( self.nifti_file.dataobj  ))/2048
         elif P_ec2_ind==1:
-            self.Echo2_deck=np.rot90( self.nifti_file_b.dataobj  )/2048
+            self.Echo2_deck=np.squeeze(np.rot90( self.nifti_file_b.dataobj  ))/2048
         elif P_ec2_ind==2:
-            self.Echo2_deck=np.rot90( self.nifti_file_c.dataobj   )/2048
+            self.Echo2_deck=np.squeeze(np.rot90( self.nifti_file_c.dataobj   ))/2048
         elif P_ec2_ind==3:
-            self.Echo2_deck=np.rot90( self.nifti_file_d.dataobj  )/2048
+            self.Echo2_deck=np.squeeze(np.rot90( self.nifti_file_d.dataobj  ))/2048
          
 
         self.Echo_diff_deck=self.Echo2_deck-self.Echo1_deck
@@ -434,12 +435,13 @@ Grid.columnconfigure(window,5,weight=1)
 #Grid.columnconfigure(window,2,weight=1)
 
 # Create figure frame for displaying MRI image
-fig = plt.figure(figsize=(5.1, 5.1), dpi=100)
+fig = plt.figure(figsize=(4.5, 4.5), dpi=100)
 ax = fig.add_subplot(111)
 
 class climits():
     lims=[-3.14,3.14]
     
+#breakpoint()
 POLD_plot=ax.imshow(Disp_image[:,:,imgFrame-1],cmap=plt.get_cmap(colormap_str),vmin=climits.lims[0],vmax=climits.lims[1], interpolation='none')
 fig.colorbar(POLD_plot, ax=ax, shrink=0.6)
 
@@ -1034,6 +1036,7 @@ class HbO2_output:
         
         
     def Calc_HbO2():
+
         Sinus_ROI_tmp=np.where(Sinus_ROI.BWMask==0, float('nan'), Sinus_ROI.BWMask)
         HbO2_output.Sinus_mean_timeseries=np.nanmean( Sinus_ROI_tmp*(Img_data.Echo2_deck-Img_data.Echo1_deck), axis=(0,1))
         
@@ -1154,7 +1157,7 @@ Save_button.grid(row=0,rowspan=1,column=0,columnspan=1,sticky='sw',pady=2,padx=1
 save_str=StringVar()
 entry_save_filename=Entry(Save_button_group,width=80,textvariable=save_str)
 entry_save_filename.grid(row=2,rowspan=1,column=0,columnspan=4,sticky='nw',pady=0,padx=0)
-save_str.set(Img_data.raw_img_filename[0:-4]+'_SBO_data.csv')
+save_str.set(Img_data.raw_img_filename[0:-4]+'_HbO2_data.csv')
 
 Data_saved_txt = Label(Save_button_group, textvariable=data_saved_str)
 Data_saved_txt.grid(row=1,rowspan=1,column=0,columnspan=1,sticky='se',pady=0,padx=0)
@@ -1166,7 +1169,7 @@ Data_saved_txt.grid(row=1,rowspan=1,column=0,columnspan=1,sticky='se',pady=0,pad
 def Calc_SS_angle():
     Calc_SS_window = Tk()
     GUI_width = window.winfo_screenwidth()*0.65
-    GUI_height = window.winfo_screenheight()*0.6
+    GUI_height = window.winfo_screenheight()*0.5
     Calc_SS_window.geometry( str(int(GUI_width)) +'x'+ str(int(GUI_height)) )
     Calc_SS_window.resizable(True,True)
 
@@ -1194,8 +1197,14 @@ def Calc_SS_angle():
     
     fig_angio = plt.figure(figsize=(2.88, 2.88), dpi=100)
     ax_sag = fig_angio.add_subplot(111,position=[0,0,1,1])
+    #ax_sag = fig_angio.add_subplot(frameon=False)
     angio_plot=ax_sag.imshow(angio_data_resh_coronal,vmin=0,vmax=0.0007,cmap='gray')
+    #ax_sag.set_xticks([], []) # OBS Mark
+    #ax_sag.set_yticks([], []) # OBS Mark
+    ax_sag.axis('off')
+
     Sag_line_plot = ax_sag.plot([], [], '.r-')
+ 
     
 
    
@@ -1220,37 +1229,61 @@ def Calc_SS_angle():
     canvas_angio = FigureCanvasTkAgg(fig_angio, master=Calc_SS_window)  # Draws the figure in the tkinter GUI window
     canvas_angio.draw()
     canvas_angio.get_tk_widget().grid(row=0,rowspan=1,column=0,columnspan=1,padx=20,pady=20) # place in grid
+    ToolbarFrame_angio = Frame(Calc_SS_window)
+    ToolbarFrame_angio.grid(row=1, column=0,rowspan=1,columnspan=1,padx=0,pady=0,sticky='nw')
+    toobar_angio = NavigationToolbar2Tk(canvas_angio, ToolbarFrame_angio)
+    
+    
+    # def onclick_sag(event):
+    #     klicker = clicker(ax_sag, ["event"], markers=["x"])
+
+
+    #     print(klicker.get_positions())
+
+    
+    # # global inv_line_coord
+    
+
+    # inv_line_coord=ax_sag.transAxes.inverted()
+    
 
 
     global coords_sag
     coords_sag=[]
     
+
     def onclick_sag(event):
         print(coords_sag)
     
-        coords_sag.append((event.x, event.y))
+        coords_sag.append((event.xdata, event.ydata))
+
         print(coords_sag)
-        Sag_line_plot[0].set_xdata( np.array([coords_sag[0][0]]   ))
-        Sag_line_plot[0].set_ydata( np.array([(angio_dim/2)-coords_sag[0][1]])   )
+        Cor_line_plot_test = ax_sag.plot(coords_sag[0][0],coords_sag[0][1],'.r')
+        #Cor_line_plot_test[0].set_ydata( np.array([(angio_dim/2)-coords_cor[0][1]])   )
         canvas_angio.draw()
 
         if len(coords_sag) == 2:
             fig_angio.canvas.mpl_disconnect(cid)
-            Sag_line_plot[0].set_xdata( np.array([coords_sag[0][0],coords_sag[1][0] ])   )
-            Sag_line_plot[0].set_ydata( np.array([(angio_dim/2)-coords_sag[0][1],(angio_dim/2)-coords_sag[1][1]])   )
+            #Cor_line_plot[0].set_xdata( np.array([coords_cor[0][0],coords_cor[1][0] ])   )
+            #Cor_line_plot[0].set_ydata( np.array([coords_cor[1][1],coords_cor[0][1] ])   )
+            Cor_line_plot_test = ax_sag.plot((coords_sag[0][0],coords_sag[1][0]), (coords_sag[0][1],coords_sag[1][1]) , '.r-')    
+    #breakpoint()
             #Sag_line_plot[0].set_xdata( np.array([30,50])   )
-            #Sag_line_plot[0].set_ydata( np.array([100,120])   )
+            #Sag_line_plot[0].set_ydata( np.array([100,120])   )  
+
             canvas_angio.draw()
-        
-            
+
+     
     cid = fig_angio.canvas.mpl_connect('button_press_event', onclick_sag)
-    
-    
+ 
     
     fig_angio_cor = plt.figure(figsize=(2.88, 2.88), dpi=100)
     ax_cor = fig_angio_cor.add_subplot(111,position=[0,0,1,1])
     angio_cor_plot=ax_cor.imshow(angio_data_resh_sag,vmin=0,vmax=0.0007,cmap='gray')
+    #ax_cor.set_xticks([], []) # OBS Mark
+    #ax_cor.set_yticks([], []) # OBS Mark
     #Cor_line_plot = ax_cor.plot([], [], '.r-')    
+    ax_cor.axis('off')
     
     
 #    Zy= ((v_rot(1)*([-info.Dimensions(1)/2 info.Dimensions(1)/2]-offcenter_n(3)))./(v_rot(3)))-offcenter_n(2);
@@ -1263,7 +1296,10 @@ def Calc_SS_angle():
     canvas_angio_cor = FigureCanvasTkAgg(fig_angio_cor, master=Calc_SS_window)  # Draws the figure in the tkinter GUI window
     canvas_angio_cor.draw()
     canvas_angio_cor.get_tk_widget().grid(row=0,rowspan=1,column=1,columnspan=1,padx=20,pady=20) # place in grid
-
+    
+    ToolbarFrame_angio = Frame(Calc_SS_window)
+    ToolbarFrame_angio.grid(row=1, column=1,rowspan=1,columnspan=1,padx=0,pady=0,sticky='nw')
+    toobar_angio = NavigationToolbar2Tk(canvas_angio_cor, ToolbarFrame_angio)
     
     
     global coords_cor
@@ -1272,9 +1308,9 @@ def Calc_SS_angle():
     def onclick_cor(event):
         print(coords_cor)
     
-        coords_cor.append((event.x, event.y))
+        coords_cor.append((event.xdata, event.ydata))
         print(coords_cor)
-        Cor_line_plot_test = ax_cor.plot(coords_cor[0][0],(angio_dim/2)-coords_cor[0][1],'.r')
+        Cor_line_plot_test = ax_cor.plot(coords_cor[0][0],coords_cor[0][1],'.r')
         #Cor_line_plot_test[0].set_ydata( np.array([(angio_dim/2)-coords_cor[0][1]])   )
         canvas_angio_cor.draw()
 
@@ -1282,7 +1318,7 @@ def Calc_SS_angle():
             fig_angio_cor.canvas.mpl_disconnect(cid)
             #Cor_line_plot[0].set_xdata( np.array([coords_cor[0][0],coords_cor[1][0] ])   )
             #Cor_line_plot[0].set_ydata( np.array([coords_cor[1][1],coords_cor[0][1] ])   )
-            Cor_line_plot_test = ax_cor.plot((coords_cor[0][0],coords_cor[1][0]), ((angio_dim/2)-coords_cor[0][1],(angio_dim/2)-coords_cor[1][1]) , '.r-')    
+            Cor_line_plot_test = ax_cor.plot((coords_cor[0][0],coords_cor[1][0]), (coords_cor[0][1],coords_cor[1][1]) , '.r-')    
             #breakpoint()
             #Sag_line_plot[0].set_xdata( np.array([30,50])   )
             #Sag_line_plot[0].set_ydata( np.array([100,120])   )  
