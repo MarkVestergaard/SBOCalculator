@@ -29,7 +29,7 @@ Journal of cerebral blood flow and metabolism, 2010, 30(9):1559-7016, doi: 10.10
 
 ## Installation
 
-Requires Python 3.8+. Clone the repository and install dependencies:
+Clone the repository and install dependencies:
 
 ```bash
 git clone https://github.com/MarkVestergaard/SBOCalculator.git
