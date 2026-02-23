@@ -1,6 +1,6 @@
 # SBOCalculator
 
-[![DOI](https://zenodo.org/badge/DOI/XXXXX.svg)](https://doi.org/XXXXX)
+[![DOI](https://zenodo.org/badge/477184153.svg)](https://doi.org/10.5281/zenodo.18743602)
 
 **SBOCalculator** (**S**usceptibility-**B**ased **O**ximetry Calculator) is a Python-based GUI for analyzing susceptibility-based oximetry (SBO) MRI data and quantifying blood oxygen saturation (HbO2).
 The software offers an intuitive graphical user interface that enables users to load, visualize, and analyze dual-echo gradient-echo MRI data and calculate oxygen saturation without any programming expertise. Images can be displayed with adjustable colormaps and intensity ranges to optimize vessel and tissue visibility. Regions of interest (ROIs) covering the target blood vessel (sinus ROI) and surrounding brain tissue (tissue ROI) can be defined through manual polygon delineation or generated semi-automatically using a built-in region-growing algorithm. From these ROIs, blood oxygen saturation (HbO2) is calculated using the susceptibility-based oximetry equation. The software also includes a phase unwrapping tool and a vessel angle estimation module for determining the vessel orientation relative to B0 from angiographic data. Results can be exported to CSV format for further statistical analysis. The software was developed so that personnel without a programming background could use it for their analyses, thus widening its usability across clinical and research settings.
